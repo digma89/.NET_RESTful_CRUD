@@ -41,6 +41,7 @@ namespace _300824022_Rodriguez__Ass5.Controllers
             }
         }
 
+
     /* [Route("email/{string:email}")]
         public HttpResponseMessage GetByEmail(string email = "email") // equal to set a default value, not necessary 
         {
