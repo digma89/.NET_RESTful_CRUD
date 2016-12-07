@@ -42,12 +42,14 @@ namespace _300824022_Rodriguez__Ass5.Controllers
         }
 
 
-    /* [Route("email/{string:email}")]
-        public HttpResponseMessage GetByEmail(string email = "email") // equal to set a default value, not necessary 
+  
+        [HttpGet]
+        [Route("api/FindByEmail/{email}")]
+        public HttpResponseMessage FindByEmail(string email = "email") // equal to set a default value, not necessary 
         {
             using (ContactEntities entity = new ContactEntities())
             {
-                var query = entity.Contacts.Where(e => e.EmailAddress.ToLower() == email.ToLower());
+                var query = entity.Contacts.FirstOrDefault(e => e.EmailAddress.ToLower() == email.ToLower());
                 if (query != null)
                 {
                     return Request.CreateResponse(HttpStatusCode.OK, query);
@@ -59,7 +61,7 @@ namespace _300824022_Rodriguez__Ass5.Controllers
 
             }
         }
-    */
+ 
 
 
 
@@ -110,6 +112,36 @@ namespace _300824022_Rodriguez__Ass5.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("api/FindByEmail/{email}")]
+        //delete email
+        public HttpResponseMessage DeleteByEmail(string email)
+        {
+            using (ContactEntities entity = new ContactEntities())
+            {
+                try
+                {
+                    var query = entity.Contacts.FirstOrDefault(e => e.EmailAddress == email);
+                    if (query != null)
+                    {
+                        entity.Contacts.Remove(query);
+                        entity.SaveChanges();
+                        return Request.CreateResponse(HttpStatusCode.OK);
+                    }
+                    else
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.NotFound, "Contact with email = " + email + "was not found");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex);
+
+                }
+            }
+        }
+
+        //Update email
         public HttpResponseMessage Put(int id, [FromBody] Contact contact)
         {
             using (ContactEntities entity = new ContactEntities())
@@ -119,7 +151,7 @@ namespace _300824022_Rodriguez__Ass5.Controllers
                     var query = entity.Contacts.FirstOrDefault(e => e.Id == id);
                     if (query != null)
                     {
-                        query.Name = contact.Name;
+                        //query.Name = contact.Name;
                         query.EmailAddress = contact.EmailAddress;
                         entity.SaveChanges();
                         return Request.CreateResponse(HttpStatusCode.OK);
